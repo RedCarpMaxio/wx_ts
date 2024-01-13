@@ -5,9 +5,8 @@ import {
     WechatyBuilder,
     Message
 } from 'wechaty'
-
 import {getWeather} from './api/weather'
-
+const { FileBox } = require('file-box');
 async function onMessage(message: Message) {
     try {
         const room = message.room()
@@ -19,11 +18,25 @@ async function onMessage(message: Message) {
         }
 
         if (content.startsWith("天气")) {
-            let city    = content.split('|')[1]
+            let city = content.split('|')[1]
+            city = city.trim()
             const res = await getWeather(city)
-            await message.say('\@'+sender.name()+'\n'+res.data)
+            await message.say('\@' + sender.name() + '\n' + res.data)
+
         }
-    } catch (e) {
+        if (content.startsWith("roll")) {
+            const args = content.split(' ').slice(1);
+            const nums = args.length
+
+            if (nums >= 2) {
+                const result = args[Math.floor(Math.random() * nums)];
+                console.log(result);
+                await message.say('\@' + sender.name() + '\n' + '小助理帮你选择:' + result)
+            }
+        }
+
+    } catch
+        (e) {
         console.error(e)
     }
 }
